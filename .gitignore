@@ -1,2 +1,5 @@
 *.swp
 *.swc
+*.o
+cw
+tags
