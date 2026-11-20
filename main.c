@@ -19,6 +19,8 @@ int main(void){
 	
 	vector_t *v = create_vector();
 	split_sentences_into_vector(v, buf);
+	sort_by_first_word(v);
+	print_v(v);
 
 	{
 		size_t i = 0;
