@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "delete_first_word.h"
+#include "error.h"
 
 void delete_first_word(char *orig){
 	char *space = strchr(orig, ' ');
@@ -18,7 +19,7 @@ void delete_first_word(char *orig){
 void split_sentences_into_vector(vector_t *v, char *buf){
 	char *cp = strdup(buf);
 	if(!cp){
-		printf("Error: failed to copy buf");
+		ERR("Error: failed to copy buf");
 		return;
 	}
 	char *token = strtok(cp, ".");
@@ -28,9 +29,11 @@ void split_sentences_into_vector(vector_t *v, char *buf){
 
 		if(*token != '\0'){
 			if(v_push_back(v, token) == -1){
-				printf("Error: failed to push sentence in vector");
+				ERR("Error: failed to push sentence in vector");
+				break;
 			}
 		}
 		token = strtok(NULL, ".");
 	}
+	free(cp);
 }
