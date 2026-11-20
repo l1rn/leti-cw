@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "string_util.h"
 #include "delete_first_word.h"
 
@@ -18,6 +19,19 @@ int main(void){
 	
 	vector_t *v = create_vector();
 	split_sentences_into_vector(v, buf);
+
+	{
+		size_t i = 0;
+		while(i < v->size){
+			delete_first_word(v->elements[i]);
+			if(v_el_size(v->elements[i]) == 0){
+				v_remove_at(v, i);			
+			} else{
+				i++;
+			}
+		}
+	}
+	
 	print_v(v);
 	delete_vector(v);
 

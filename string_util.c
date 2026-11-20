@@ -41,6 +41,21 @@ int resize_vector(vector_t *v){
 	return 0;
 }
 
+int v_el_size(char *str){
+	char *cp = strdup(str);
+	if(!cp){
+		return 0;
+	}
+	int count = 0;
+	char *t = strtok(cp, " ");
+	while(t != NULL){
+		count++;
+		t = strtok(NULL, " ");
+	}
+	free(cp);
+	return count;
+}
+
 int v_push_back(vector_t *v, char *el){
 	if(v->size >= v->cap){
 		if(resize_vector(v) == -1){
@@ -57,8 +72,20 @@ int v_push_back(vector_t *v, char *el){
 	return 0;
 }
 
+int v_remove_at(vector_t *v, size_t idx){
+	if(v == NULL || idx >= v->size)
+		return -1;
+
+	free(v->elements[idx]);
+	for(size_t i = idx; i < v->size - 1; i++){
+		v->elements[i] = v->elements[i + 1];
+	}
+	v->size--;
+	return 0;
+}
+
 void print_v(vector_t *v){
 	for(size_t i = 0; i < v->size; i++){
-		printf("%s\n", v->elements[i]);
+		printf("%s (%d)\n", v->elements[i], v_el_size(v->elements[i]));
 	}
 }

@@ -13,7 +13,6 @@ void delete_first_word(char *orig){
 	} else{
 		orig[0] = '\0';
 	}
-	printf("orig: %s\n", orig);
 }
 
 void split_sentences_into_vector(vector_t *v, char *buf){
