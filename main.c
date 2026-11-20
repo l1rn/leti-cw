@@ -16,16 +16,11 @@ int main(void){
 	}
 	buf[strcspn(buf, "\n")] = '\0';
 	
-	split_sentences_into_array(buf);
-	delete_first_word(buf);
-
 	vector_t *v = create_vector();
-	v_push_back(v, "sidfiadsfiadfidsa. 3 23 42");
-	v_push_back(v, " fsafdsadsa dsa");
+	split_sentences_into_vector(v, buf);
 	print_v(v);
 	delete_vector(v);
 
-	printf("%s\n", buf);
 	free(buf);
 
 	return 0;
