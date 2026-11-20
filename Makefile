@@ -3,7 +3,7 @@ CFLAGS=-Wall -Wextra
 
 all: cw run
 
-cw: main.o delete_first_word.o string_util.o
+cw: main.o delete_first_word.o string_util.o sort_first_word.o task_manager.o
 	$(CC) $(CFLAGS) $^ -o $@
 run: cw
 	./cw

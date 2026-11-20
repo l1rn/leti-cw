@@ -1,43 +1,8 @@
+#include "task_manager.h"
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include "string_util.h"
-#include "delete_first_word.h"
 
 int main(void){
-	char *buf = malloc(200);
-	if(buf == NULL){
-		return 0;
-	}
-	if(fgets(buf, 200, stdin) == NULL){
-		printf("Failed to read string.\n");
-		free(buf);
-		return 0;
-	}
-	buf[strcspn(buf, "\n")] = '\0';
-	
-	vector_t *v = create_vector();
-	split_sentences_into_vector(v, buf);
-	sort_by_first_word(v);
-	print_v(v);
-
-	{
-		size_t i = 0;
-		while(i < v->size){
-			delete_first_word(v->elements[i]);
-			if(v_el_size(v->elements[i]) == 0){
-				v_remove_at(v, i);			
-			} else{
-				i++;
-			}
-		}
-	}
-	
-	print_v(v);
-	delete_vector(v);
-
-	free(buf);
-
+	printf("Course work for option \e[1;94m1\e[0;37m, created by \e[1;95mIvan Taksatov\e[0;0m\n");
+	run_process();
 	return 0;
 }

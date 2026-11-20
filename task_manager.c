@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "string_util.h"
+#include "task_manager.h"
+#include "delete_first_word.h"
+#include "sort_first_word.h"
+
+int run_process(){
+	char *buf = malloc(200);
+	if(buf == NULL){
+		return 0;
+	}
+	if(fgets(buf, 200, stdin) == NULL){
+		printf("Failed to read string.\n");
+		free(buf);
+		return 0;
+	}
+	buf[strcspn(buf, "\n")] = '\0';
+	
+	vector_t *v = create_vector();
+	split_sentences_into_vector(v, buf);
+	sort_by_first_word(v);
+	print_v(v);
+
+	{
+		size_t i = 0;
+		while(i < v->size){
+			delete_first_word(v->elements[i]);
+			if(v_el_size(v->elements[i]) == 0){
+				v_remove_at(v, i);			
+			} else{
+				i++;
+			}
+		}
+	}
+	
+	print_v(v);
+	delete_vector(v);
+
+	free(buf);
+	return 0;
+}
