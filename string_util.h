@@ -18,5 +18,6 @@ int v_el_size(char *str);
 
 void sort_by_first_word(vector_t *v);
 void print_v(vector_t *v);
+vector_t *read_sentences(void);
 
 #endif // STRING_UTIL_H

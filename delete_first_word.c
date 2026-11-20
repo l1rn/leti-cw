@@ -27,7 +27,19 @@ void split_sentences_into_vector(vector_t *v, char *buf){
 			token++;
 
 		if(*token != '\0'){
-			if(v_push_back(v, token) == -1){
+			size_t len = strlen(token);
+			char *sentence = malloc(len + 2);
+			if(sentence == NULL){
+				ERR("failed to allocate a sentence");
+				break;
+			}
+			memcpy(sentence, token, len);
+			sentence[len] = '.';
+			sentence[len + 1] = '\0';
+
+			int res = v_push_back(v, sentence);	
+			free(sentence);
+			if(res == -1){
 				ERR("Error: failed to push sentence in vector");
 				break;
 			}

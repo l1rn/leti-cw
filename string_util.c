@@ -2,7 +2,10 @@
 #include <string.h>
 #include <stdio.h>
 #include "string_util.h"
+#include "delete_first_word.h"
 #include "error.h"
+
+#define BUFFER_SIZE 1024
 
 vector_t *create_vector(void){
 	vector_t *v = malloc(sizeof(vector_t));
@@ -87,8 +90,26 @@ int v_remove_at(vector_t *v, size_t idx){
 
 void print_v(vector_t *v){
 	for(size_t i = 0; i < v->size; i++){
-		printf("%s (%d)\n", v->elements[i], v_el_size(v->elements[i]));
+		printf("%s\n", v->elements[i]);
 	}
 }
 
+vector_t *read_sentences(void){
+	char *buf = malloc(BUFFER_SIZE);
+	if(buf == NULL){
+		return NULL;
+	}
+	if(fgets(buf, BUFFER_SIZE, stdin) == NULL){
+		ERR("Failed to read string.\n");
+		free(buf);
+		return NULL;
+	}
+	buf[strcspn(buf, "\n")] = '\0';
 
+	vector_t *v = create_vector();
+	if(v != NULL){
+		split_sentences_into_vector(v, buf);
+	}
+	free(buf);
+	return v;
+}

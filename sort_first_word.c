@@ -11,8 +11,10 @@ int len_first_word(char *str){
 }
 
 int cmp_first_word(const void *a, const void *b){
-	const char *s1 = *(char * const *)a;
-	const char *s2 = *(char * const *)b;
+	char **pa = (char **)a;
+	const char *s1 = *pa;
+	char **pb = (char **)b;
+	const char *s2 = *pb;
 	
 	int s1_len = len_first_word(s1);
 	int s2_len = len_first_word(s2);
