@@ -1,10 +1,12 @@
-#include "string_util.h"
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include "string_util.h"
 
 vector_t *create_vector(void){
 	vector_t *v = malloc(sizeof(vector_t));
-	iv(v == NULL){
-		return NULL
+	if(v == NULL){
+		return NULL;
 	}
 	v->size = 0;
 	v->cap = 4;
@@ -17,6 +19,12 @@ vector_t *create_vector(void){
 }
 
 void delete_vector(vector_t *v){
+	if(v == NULL){
+		return;
+	}
+	for(size_t i = 0; i < v->size; i++){
+		free(v->elements[i]);
+	}
 	free(v->elements);
 	free(v);
 }
@@ -47,4 +55,10 @@ int v_push_back(vector_t *v, char *el){
 	strcpy(cp, el);
 	v->elements[v->size++] = cp;
 	return 0;
+}
+
+void print_v(vector_t *v){
+	for(size_t i = 0; i < v->size; i++){
+		printf("%s\n", v->elements[i]);
+	}
 }

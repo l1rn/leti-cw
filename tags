@@ -1,0 +1,5 @@
+create_vector	string_util.c	/^vector_t *create_vector(void){$/;"	f	typeref:typename:vector_t *
+delete_vector	string_util.c	/^void delete_vector(vector_t *v){$/;"	f	typeref:typename:void
+print_v	string_util.c	/^void print_v(vector_t *v){$/;"	f	typeref:typename:void
+resize_vector	string_util.c	/^int resize_vector(vector_t *v){$/;"	f	typeref:typename:int
+v_push_back	string_util.c	/^int v_push_back(vector_t *v, char *el){$/;"	f	typeref:typename:int

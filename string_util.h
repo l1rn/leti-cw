@@ -9,8 +9,9 @@ typedef struct vector{
 	size_t cap;
 } vector_t;
 
-vector_r *create_vector(void);
+vector_t *create_vector(void);
 void delete_vector(vector_t *v);
-int v_push(vector_t *v, char *el);
+int v_push_back(vector_t *v, char *el);
+void print_v(vector_t *v);
 
 #endif // STRING_UTIL_H
