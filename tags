@@ -1,5 +1,33 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/lirn/kusovaya/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+%.o	Makefile	/^%.o: %.c$/;"	t
+CC	Makefile	/^CC=gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS=-Wall -Wextra$/;"	m
+DELETE_FIRST_WORD_H	delete_first_word.h	/^#define DELETE_FIRST_WORD_H$/;"	d
+STRING_UTIL_H	string_util.h	/^#define STRING_UTIL_H$/;"	d
+all	Makefile	/^all: cw run$/;"	t
+cap	string_util.h	/^	size_t cap;$/;"	m	struct:vector	typeref:typename:size_t
+clean	Makefile	/^clean:$/;"	t
 create_vector	string_util.c	/^vector_t *create_vector(void){$/;"	f	typeref:typename:vector_t *
+cw	Makefile	/^cw: main.o delete_first_word.o string_util.o$/;"	t
+delete_first_word	delete_first_word.c	/^void delete_first_word(char *orig){$/;"	f	typeref:typename:void
 delete_vector	string_util.c	/^void delete_vector(vector_t *v){$/;"	f	typeref:typename:void
+elements	string_util.h	/^	char **elements;$/;"	m	struct:vector	typeref:typename:char **
+main	main.c	/^int main(void){$/;"	f	typeref:typename:int
 print_v	string_util.c	/^void print_v(vector_t *v){$/;"	f	typeref:typename:void
 resize_vector	string_util.c	/^int resize_vector(vector_t *v){$/;"	f	typeref:typename:int
+run	Makefile	/^run: cw$/;"	t
+size	string_util.h	/^	size_t size;$/;"	m	struct:vector	typeref:typename:size_t
+split_sentences_into_array	delete_first_word.c	/^void split_sentences_into_array(char *buf){$/;"	f	typeref:typename:void
 v_push_back	string_util.c	/^int v_push_back(vector_t *v, char *el){$/;"	f	typeref:typename:int
+vector	string_util.h	/^typedef struct vector{$/;"	s
+vector_t	string_util.h	/^} vector_t;$/;"	t	typeref:struct:vector
