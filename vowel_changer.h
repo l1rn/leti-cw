@@ -3,6 +3,6 @@
 
 #include <stddef.h>
 
-void replace_vowels(char *s, char al_sig[2]);
+void replace_vowels(wchar_t *s, char al_sig[2]);
 
 #endif // VOWEL_CHANGER_H

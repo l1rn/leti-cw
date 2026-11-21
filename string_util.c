@@ -1,11 +1,40 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <wchar.h>
+#include <wctype.h>
 #include "string_util.h"
 #include "delete_first_word.h"
 #include "error.h"
 
 #define BUFFER_SIZE 1024
+
+wchar_t *get_wc(char *c){
+	if(c == NULL)
+		return NULL;
+
+	size_t c_size = mbstowcs(NULL, c, 0);
+	if(c_size == (size_t) - 1){
+		return NULL;
+	}
+
+	size_t slots = c_size + 1;
+	wchar_t *wc = malloc(slots * sizeof(wchar_t));
+	if(wc == NULL){
+		return NULL;
+	}
+
+	size_t n = mbstowcs(wc, c, slots);
+	if(n == (size_t) - 1){
+		free(wc);
+		return NULL;
+	}
+	return wc;
+}
+
+void free_wc_string(wchar_t *wc_s){
+	free(wc_s);
+}
 
 vector_t *create_vector(void){
 	vector_t *v = malloc(sizeof(vector_t));
@@ -14,7 +43,7 @@ vector_t *create_vector(void){
 	}
 	v->size = 0;
 	v->cap = 4;
-	v->elements = malloc(v->cap * sizeof(char *));
+	v->elements = malloc(v->cap * sizeof(wchar_t *));
 	if(v->elements == NULL){
 		free(v);
 		return NULL;
@@ -35,7 +64,7 @@ void delete_vector(vector_t *v){
 
 int resize_vector(vector_t *v){
 	int new_cap = v->cap * 2;
-	char **tmp = realloc(v->elements, new_cap * sizeof(char *));
+	wchar_t **tmp = realloc(v->elements, new_cap * sizeof(wchar_t *));
 
 	if(tmp == NULL){
 		return -1;
@@ -45,33 +74,43 @@ int resize_vector(vector_t *v){
 	return 0;
 }
 
-int v_el_size(char *str){
-	char *cp = strdup(str);
-	if(!cp){
-		return 0;
+int v_el_size(wchar_t *str){
+	if(str == NULL){
+		return -1;
 	}
+
 	int count = 0;
-	char *t = strtok(cp, " ");
-	while(t != NULL){
-		count++;
-		t = strtok(NULL, " ");
+	int flag = 0;
+	for(size_t i = 0; i < wcslen(str); i++){
+		if(iswspace(str[i])){
+			flag = 0;
+		}
+		else {
+			if(flag == 0){
+				count++;
+				flag = 1;
+			}
+		}
 	}
-	free(cp);
 	return count;
 }
 
-int v_push_back(vector_t *v, char *el){
+int v_push_back(vector_t *v, wchar_t *el){
+	if(v == NULL || el == NULL){
+		return -1;
+	}
 	if(v->size >= v->cap){
 		if(resize_vector(v) == -1){
 			return -1;
 		}
 	}
 
-	char *cp = malloc(strlen(el) + 1);
-	if(!cp){
+	size_t cp_size = wcslen(el) + 1;
+	wchar_t *cp = malloc(cp_size * sizeof(wchar_t));
+	if(cp == NULL){
 		return -1;
 	}
-	strcpy(cp, el);
+	wcscpy(cp, el);
 	v->elements[v->size++] = cp;
 	return 0;
 }
@@ -90,7 +129,7 @@ int v_remove_at(vector_t *v, size_t idx){
 
 void print_v(vector_t *v){
 	for(size_t i = 0; i < v->size; i++){
-		printf("%s\n", v->elements[i]);
+		wprintf(L"%ls\n", v->elements[i]);
 	}
 }
 
