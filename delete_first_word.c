@@ -33,6 +33,7 @@ void split_sentences_into_vector(vector_t *v, char *buf){
 				ERR("failed to allocate a sentence");
 				break;
 			}
+			// save a sign that was before '!' '.' '?'
 			memcpy(sentence, token, len);
 			sentence[len] = '.';
 			sentence[len + 1] = '\0';

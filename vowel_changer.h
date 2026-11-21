@@ -1,0 +1,8 @@
+#ifndef VOWEL_CHANGER_H
+#define VOWEL_CHANGER_H
+
+#include <stddef.h>
+
+void replace_vowels(char *s, char al_sig[2]);
+
+#endif // VOWEL_CHANGER_H

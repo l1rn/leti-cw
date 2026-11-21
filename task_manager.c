@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "alphabet.h"
 #include "string_util.h"
 #include "task_manager.h"
 #include "delete_first_word.h"
 #include "sort_first_word.h"
 #include "error.h"
+#include "vowel_changer.h"
 
 //1
 static int task_replace_vowels(void){
@@ -13,7 +15,16 @@ static int task_replace_vowels(void){
 	if(v == NULL)
 		return -1;
 	
-	
+	size_t i = 0;
+	while(i < v->size){
+		// todo: for capital letters shift their value
+		replace_vowels(v->elements[i], "EN");	
+
+		replace_vowels(v->elements[i], "RU");	
+		i++;
+	}
+	print_v(v);
+	return 0;
 }
 
 // 2
@@ -63,6 +74,7 @@ int run_process(){
 		case 0:
 			break;
 		case 1:
+			task_replace_vowels();
 			break;
 		case 2: 
 			task_remove_first_words();
