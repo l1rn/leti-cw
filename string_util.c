@@ -99,6 +99,7 @@ int v_push_back(vector_t *v, wchar_t *el){
 	if(v == NULL || el == NULL){
 		return -1;
 	}
+
 	if(v->size >= v->cap){
 		if(resize_vector(v) == -1){
 			return -1;
@@ -127,6 +128,17 @@ int v_remove_at(vector_t *v, size_t idx){
 	return 0;
 }
 
+int v_replace_at(vector_t *v, size_t idx, wchar_t *new_el){
+	if(v == NULL || idx >= v->size || new_el == NULL){
+		return -1;
+	}
+
+	free(v->elements[idx]); 
+	v->elements[idx] = new_el;
+
+	return 0;
+}
+
 void print_v(vector_t *v){
 	for(size_t i = 0; i < v->size; i++){
 		wprintf(L"%ls\n", v->elements[i]);
@@ -134,21 +146,24 @@ void print_v(vector_t *v){
 }
 
 vector_t *read_sentences(void){
-	char *buf = malloc(BUFFER_SIZE);
+	wchar_t *buf = malloc(BUFFER_SIZE * sizeof(wchar_t));
 	if(buf == NULL){
 		return NULL;
 	}
-	if(fgets(buf, BUFFER_SIZE, stdin) == NULL){
+
+	if(fgetws(buf, BUFFER_SIZE, stdin) == NULL){
 		ERR("Failed to read string.\n");
 		free(buf);
 		return NULL;
 	}
-	buf[strcspn(buf, "\n")] = '\0';
+	buf[wcscspn(buf, L"\n")] = '\0';
 
 	vector_t *v = create_vector();
+
 	if(v != NULL){
 		split_sentences_into_vector(v, buf);
 	}
+
 	free(buf);
 	return v;
 }

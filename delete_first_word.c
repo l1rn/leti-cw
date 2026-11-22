@@ -17,8 +17,7 @@ void delete_first_word(wchar_t *orig){
 	}
 }
 
-void split_sentences_into_vector(vector_t *v, char *buf){
-	wchar_t *wc_buf = get_wc(buf);
+void split_sentences_into_vector(vector_t *v, wchar_t *wc_buf){
 	wchar_t *buffer;
 
 	wchar_t *token = wcstok(wc_buf, L".!?", &buffer);
@@ -36,5 +35,4 @@ void split_sentences_into_vector(vector_t *v, char *buf){
 		}
 		token = wcstok(NULL, L".!?", &buffer);
 	}
-	free_wc_string(wc_buf);
 }
