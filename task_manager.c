@@ -4,6 +4,7 @@
 
 #include "alphabet.h"
 #include "string_util.h"
+#include "store_util.h"
 #include "task_manager.h"
 #include "delete_first_word.h"
 #include "sort_first_word.h"
@@ -64,7 +65,7 @@ static int task_sort_by_first_word(){
 }
 
 // 4
-static int task_digit_replacer(){
+static int task_digit_replacer(void){
 	wchar_t *split = malloc(256 * sizeof(wchar_t));
 	
 	wscanf(L"%256ls", split);
@@ -88,6 +89,18 @@ static int task_digit_replacer(){
 	print_v(v);
 
 	free(split);
+	delete_vector(v);
+	return 0;
+}
+
+static int task_count_and_ss(void){
+	vector_t *v = read_sentences();
+	size_t i = 0;
+	while(i < v->size){
+		e_read_sentence(v->elements[i]);
+		i++;
+	}
+
 	delete_vector(v);
 	return 0;
 }
@@ -143,6 +156,7 @@ int run_process(){
 			task_digit_replacer();
 			break;
 		case 5:
+			task_count_and_ss();
 			break;
 		case 6:
 			print_help();
