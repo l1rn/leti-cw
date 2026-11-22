@@ -19,7 +19,6 @@ static int task_replace_vowels(void){
 	
 	size_t i = 0;
 	while(i < v->size){
-		// todo: for capital letters shift their value
 		replace_vowels(v->elements[i], "EN");	
 
 		replace_vowels(v->elements[i], "RU");	
