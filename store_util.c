@@ -1,6 +1,7 @@
 #include "store_util.h"
 #include <stdlib.h>
 #include <wchar.h>
+#include "error.h"
 
 word_entry_t *create_word_entry(wchar_t *v){
 	word_entry_t *e = malloc(sizeof(word_entry_t));
@@ -24,11 +25,45 @@ word_entry_t *create_word_entry(wchar_t *v){
 	return e;
 }
 
-word_entry_t *find_entry(word_entry_t *entries, size_t n, wchar_t *word){
-	for(size_t i = 0; i < n; i++)
+int word_list_init(word_entry_list *l){
+	l->size = 0;
+	l->cap = 8;
+	l->items = malloc(l->cap * sizeof *l->items);
+	return l->items ? 0 : -1;
+}
+
+word_entry_t *find_entry(word_entry_t *entries, wchar_t *word){
+	for(size_t i = 0; i < entries->size; i++)
 		if(wcscmp(entries[i].value, word) == 0)
 			return &entries[i];
 	return NULL;
+}
+
+int word_list_add_item(word_entry_list *l, word_entry_t *e){
+	if(l == NULL || e == NULL){
+		ERR("null list or word_entry");
+		return -1;
+	}
+
+	if(l->size >= l->cap){
+		size_t new_cap = l->cap * 2;
+		word_entry_t *tmp = realloc(l->items, new_cap * sizeof *tmp);
+		l->items = tmp;
+		l->cap = new_cap;
+	}
+
+	word_entry_t *e = &l->items[l->size];
+	if
+	l->items[l->size++] = e;
+	return 0;
+}
+
+int word_list_find_or_add_item(word_entry_list *l, wchar_t *value){
+	if(find_entry(l, value) != NULL) return 1;
+	else{
+		if(word_list_add_item(l, find_entry(l, value)) != -1)
+			return 0;
+	}
 }
 
 int e_push_back(word_entry_t *e, int idx){
@@ -45,21 +80,21 @@ int e_push_back(word_entry_t *e, int idx){
 	return 0;
 }
 
-int e_read_sentence(wchar_t *s, word_entry_t *entries, size_t n){
+int e_read_sentence(wchar_t *s, int idx, word_entry_t *entries){
 	if(s == NULL){
 		return -1;
 	}
 	wchar_t *buffer;
-	wchar_t *token = wcstok(s, L" ,.!?", &buffer);
+	wchar_t *token = wcstok(s, L" ,;", &buffer);
 	size_t i = 0;
-	while(token != NULL){
-		word_entry_t *e = find_entry(entries, n, token);
+	while(token != NULL) {
+		word_entry_t *e = find_entry(entries, token);
 		if(e == NULL){
 			e = create_word_entry(word);
 		} else {
-			
+			e_push_back(e, idx);		
 		}
-		token = wcstok(s, L" ,.!?", &buffer);
+		token = wcstok(s, L" ,;", &buffer);
 	}
 	wprintf(L"%ls\n", token);
 	return 0;
@@ -68,4 +103,13 @@ int e_read_sentence(wchar_t *s, word_entry_t *entries, size_t n){
 void free_word_entry(word_entry_t *e){
 	free(e->value);
 	free(e->arr);
+}
+
+void free_word_list(word_entry_list *l){
+	for(size_t i = 0; i < l->size; i++){
+		free_word_entry(&l->items[i]);
+	}
+	free(l->items);
+	l->items = NULL;
+	l->size = l->capacity = 0;
 }

@@ -96,11 +96,14 @@ static int task_digit_replacer(void){
 static int task_count_and_ss(void){
 	vector_t *v = read_sentences();
 	size_t i = 0;
+	word_entry_list *list;
+	word_list_init(list);
 	while(i < v->size){
-		e_read_sentence(v->elements[i]);
+		e_read_sentence(v->elements[i], i, list);
 		i++;
 	}
 
+	free_word_list(list);
 	delete_vector(v);
 	return 0;
 }
