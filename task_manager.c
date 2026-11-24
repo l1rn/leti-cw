@@ -12,6 +12,15 @@
 #include "vowel_changer.h"
 #include "digit_to_alpha.h"
 
+static int task_zero(void){
+	vector_t *v = read_sentences();
+	if(v == NULL)
+		return -1;
+
+	print_v(v);
+	delete_vector(v);
+	return 0;
+}
 //1
 static int task_replace_vowels(void){
 	vector_t *v = read_sentences();
@@ -144,7 +153,7 @@ int run_process(){
 
 	switch(n){
 		case 0:
-			
+			task_zero();							
 			break;
 		case 1:
 			task_replace_vowels();

@@ -32,10 +32,10 @@ int word_list_init(word_entry_list *l){
 	return l->items ? 0 : -1;
 }
 
-word_entry_t *find_entry(word_entry_t *entries, wchar_t *word){
+word_entry_t *find_entry(word_entry_list *entries, wchar_t *word){
 	for(size_t i = 0; i < entries->size; i++)
-		if(wcscmp(entries[i].value, word) == 0)
-			return &entries[i];
+		if(wcscmp(entries->items[i].value, word) == 0)
+			return &entries->items[i];
 	return NULL;
 }
 
@@ -46,15 +46,16 @@ int word_list_add_item(word_entry_list *l, word_entry_t *e){
 	}
 
 	if(l->size >= l->cap){
-		size_t new_cap = l->cap * 2;
+		size_t new_cap = l->cap ? l->cap * 2 : 4;
 		word_entry_t *tmp = realloc(l->items, new_cap * sizeof *tmp);
+		if(tmp == NULL){
+			return -1;
+		}
 		l->items = tmp;
 		l->cap = new_cap;
 	}
 
-	word_entry_t *e = &l->items[l->size];
-	if
-	l->items[l->size++] = e;
+	l->items[l->size++] = *e;
 	return 0;
 }
 
@@ -64,6 +65,7 @@ int word_list_find_or_add_item(word_entry_list *l, wchar_t *value){
 		if(word_list_add_item(l, find_entry(l, value)) != -1)
 			return 0;
 	}
+	return -1;
 }
 
 int e_push_back(word_entry_t *e, int idx){
@@ -80,17 +82,17 @@ int e_push_back(word_entry_t *e, int idx){
 	return 0;
 }
 
-int e_read_sentence(wchar_t *s, int idx, word_entry_t *entries){
+int e_read_sentence(wchar_t *s, int idx, word_entry_list *entries){
 	if(s == NULL){
 		return -1;
 	}
+
 	wchar_t *buffer;
 	wchar_t *token = wcstok(s, L" ,;", &buffer);
-	size_t i = 0;
 	while(token != NULL) {
 		word_entry_t *e = find_entry(entries, token);
 		if(e == NULL){
-			e = create_word_entry(word);
+			e = create_word_entry(token);
 		} else {
 			e_push_back(e, idx);		
 		}
@@ -111,5 +113,5 @@ void free_word_list(word_entry_list *l){
 	}
 	free(l->items);
 	l->items = NULL;
-	l->size = l->capacity = 0;
+	l->size = l->cap = 0;
 }

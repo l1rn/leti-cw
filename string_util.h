@@ -20,6 +20,7 @@ int v_push_back(vector_t *v, wchar_t *el);
 int v_remove_at(vector_t *v, size_t idx);
 int v_replace_at(vector_t *v, size_t idx, wchar_t *new_el);
 int v_el_size(wchar_t *str);
+int v_in_vector(vector_t *v, wchar_t *s);
 
 void sort_by_first_word(vector_t *v);
 void print_v(vector_t *v);

@@ -74,6 +74,28 @@ int resize_vector(vector_t *v){
 	return 0;
 }
 
+int v_s_lower_cmp(wchar_t *s1, wchar_t *s2){
+	wchar_t *cp1 = wcsdup(s1);
+	wchar_t *cp2 = wcsdup(s2);
+	for(size_t i = 0; i < wcslen(cp1); i++){
+		cp1[i] = towlower(cp1[i]);
+		cp2[i] = towlower(cp2[i]);
+	}
+	int res = wcscmp(cp1, cp2);
+	free(cp1);
+	free(cp2);
+	return res;
+}
+
+int v_in_vector(vector_t *v, wchar_t *s){
+	for(size_t i = 0; i < v->size; i++){
+		if(wcslen(v->elements[i]) == wcslen(s)){
+			return v_s_lower_cmp(v->elements[i], s);
+		}
+	}
+	return -1;
+}
+
 int v_el_size(wchar_t *str){
 	if(str == NULL){
 		return -1;
