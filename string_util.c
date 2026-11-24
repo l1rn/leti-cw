@@ -167,18 +167,46 @@ void print_v(vector_t *v){
 	}
 }
 
+int check_for_end_sentence(wint_t wc, int flag){
+	return flag == 1 && (wchar_t)wc == L'\n';
+}
+
 vector_t *read_sentences(void){
-	wchar_t *buf = malloc(BUFFER_SIZE * sizeof(wchar_t));
+	size_t cap = BUFFER_SIZE;
+	wchar_t *buf = malloc(cap * sizeof(wchar_t));
+	size_t size = 0;
+
 	if(buf == NULL){
 		return NULL;
 	}
 
-	if(fgetws(buf, BUFFER_SIZE, stdin) == NULL){
-		ERR("Failed to read string.\n");
-		free(buf);
-		return NULL;
+	wint_t wc;
+	int flag_was_end = 0;
+	while((wc = fgetwc(stdin)) != WEOF) {
+		if(size + 1 >= cap){
+			size_t new_cap = cap * 2;
+			wchar_t *tmp = realloc(buf, new_cap * sizeof(wchar_t));
+			if(tmp == NULL){
+				free(buf);
+				return NULL;
+			}
+			buf = tmp;
+			cap = new_cap;
+		} 
+		if(check_for_end_sentence(wc, flag_was_end)){
+			if(size > 0) size--;
+			break;
+		}
+		if(wc == L'\n') {
+			flag_was_end = 1;
+			buf[size++] = L' ';
+		}
+		else{
+			flag_was_end = 0;
+			buf[size++] = (wchar_t)wc;
+		}
 	}
-	buf[wcscspn(buf, L"\n")] = '\0';
+	buf[size] = L'\0';
 
 	vector_t *v = create_vector();
 

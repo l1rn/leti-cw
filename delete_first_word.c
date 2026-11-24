@@ -20,10 +20,11 @@ void delete_first_word(wchar_t *orig){
 void split_sentences_into_vector(vector_t *v, wchar_t *wc_buf){
 	wchar_t *buffer;
 
-	wchar_t *token = wcstor(wc_buf, L"\n.!?", &buffer);
+	wchar_t *token = wcstok(wc_buf, L".!?", &buffer);
 	while(token != NULL){
-		while(*token == ' ')
+		while(*token == ' '){
 			token++;
+		}
 
 		if(*token != L'\0'){
 			if(v_in_vector(v, token) == -1) {

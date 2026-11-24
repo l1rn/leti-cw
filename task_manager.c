@@ -21,6 +21,7 @@ static int task_zero(void){
 	delete_vector(v);
 	return 0;
 }
+
 //1
 static int task_replace_vowels(void){
 	vector_t *v = read_sentences();
