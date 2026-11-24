@@ -32,6 +32,39 @@ wchar_t *get_wc(char *c){
 	return wc;
 }
 
+int is_terminator(wchar_t wc){
+	return wc == L'.' || wc == L'!' || wc == L'?';
+}
+
+void split_sentences_into_vector(vector_t *v, wchar_t *wc_buf){
+	size_t start = 0;
+	while(wc_buf[start] != L'\0'){
+		while(iswspace(wc_buf[start])){
+			start++;
+		}
+		if(wc_buf[start] == L'\0'){
+			break;
+		}
+		
+		size_t end = start + wcscspn(wc_buf + start, L".!?");
+		if(wc_buf[end] == L'\0'){
+			break;
+		}
+		if(is_terminator(wc_buf[end])){
+			size_t len = end - start + 1;
+			wchar_t *cp = malloc((len + 1) * sizeof(wchar_t));
+			if(cp == NULL){
+				ERR("failed to allocate for a sentence");
+				return;
+			}
+			wmemcpy(cp, wc_buf + start, len);
+			cp[len] = L'\0';
+			v_push_back(v, cp);
+		}
+		start = end + 1;
+	}
+}
+
 void free_wc_string(wchar_t *wc_s){
 	free(wc_s);
 }

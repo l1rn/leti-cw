@@ -17,26 +17,3 @@ void delete_first_word(wchar_t *orig){
 	}
 }
 
-void split_sentences_into_vector(vector_t *v, wchar_t *wc_buf){
-	wchar_t *buffer;
-
-	wchar_t *token = wcstok(wc_buf, L".!?", &buffer);
-	while(token != NULL){
-		while(*token == ' '){
-			token++;
-		}
-
-		if(*token != L'\0'){
-			if(v_in_vector(v, token) == -1) {
-				int res = v_push_back(v, token);	
-
-				if(res == -1){
-					ERR("Error: failed to push sentence in vector");
-					break;
-				}
-			}
-			
-		}
-		token = wcstok(NULL, L".!?", &buffer);
-	}
-}
