@@ -2,5 +2,7 @@
 *.swc
 *.swo
 *.o
+*.txt
+debug
 cw
 tags
