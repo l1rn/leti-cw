@@ -54,12 +54,17 @@ void split_sentences_into_vector(vector_t *v, wchar_t *wc_buf){
 			size_t len = end - start + 1;
 			wchar_t *cp = malloc((len + 1) * sizeof(wchar_t));
 			if(cp == NULL){
-				ERR("failed to allocate for a sentence");
+				ERR("failed to allocate memory for a sentence");
 				return;
 			}
 			wmemcpy(cp, wc_buf + start, len);
 			cp[len] = L'\0';
-			v_push_back(v, cp);
+			if(v_push_back(v, cp) == -1){
+				free(cp);
+				ERR("failed to push a sentence");
+				return;
+			}
+			free(cp);
 		}
 		start = end + 1;
 	}
