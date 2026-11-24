@@ -17,6 +17,6 @@ run: cw
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o cw
+	rm -f *.o cw debug
 
-.PHONY: all clean run
+.PHONY: all clean run debug
