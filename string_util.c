@@ -9,6 +9,26 @@
 
 #define BUFFER_SIZE 1024
 
+int v_s_lower_cmp(wchar_t *s1, wchar_t *s2, size_t s2_size){
+	if(wcslen(s1) != s2_size) return 0;
+	for(size_t i = 0; i < s2_size; i++){
+		if(towlower(s1[i]) != towlower(s2[i])){
+			return 0;
+		}
+	}
+	return 1;
+}
+
+static int v_is_duplicate(vector_t *v, wchar_t *s){
+	size_t size_ws = wcslen(s);
+	for(size_t i = 0; i < v->size; i++){
+		if(v_s_lower_cmp(v->elements[i], s, size_ws)){
+			return 1;
+		}
+	}
+	return 0;
+}
+
 wchar_t *get_wc(char *c){
 	if(c == NULL)
 		return NULL;
@@ -59,11 +79,14 @@ void split_sentences_into_vector(vector_t *v, wchar_t *wc_buf){
 			}
 			wmemcpy(cp, wc_buf + start, len);
 			cp[len] = L'\0';
-			if(v_push_back(v, cp) == -1){
-				free(cp);
-				ERR("failed to push a sentence");
-				return;
+			if(!v_is_duplicate(v, cp)){
+				if(v_push_back(v, cp) == -1){
+					free(cp);
+					ERR("failed to push a sentence");
+					return;
+				}
 			}
+			
 			free(cp);
 		}
 		start = end + 1;
@@ -112,27 +135,7 @@ int resize_vector(vector_t *v){
 	return 0;
 }
 
-int v_s_lower_cmp(wchar_t *s1, wchar_t *s2){
-	wchar_t *cp1 = wcsdup(s1);
-	wchar_t *cp2 = wcsdup(s2);
-	for(size_t i = 0; i < wcslen(cp1); i++){
-		cp1[i] = towlower(cp1[i]);
-		cp2[i] = towlower(cp2[i]);
-	}
-	int res = wcscmp(cp1, cp2);
-	free(cp1);
-	free(cp2);
-	return res;
-}
 
-int v_in_vector(vector_t *v, wchar_t *s){
-	for(size_t i = 0; i < v->size; i++){
-		if(wcslen(v->elements[i]) == wcslen(s)){
-			return v_s_lower_cmp(v->elements[i], s);
-		}
-	}
-	return -1;
-}
 
 int v_el_size(wchar_t *str){
 	if(str == NULL){
