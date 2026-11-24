@@ -3,6 +3,12 @@
 *.swo
 *.o
 *.txt
+
+src/*.swp
+src/*.swc
+src/*.swo
+src/*.o
+src/*.txt
 debug
 cw
 tags
