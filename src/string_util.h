@@ -4,11 +4,18 @@
 #include <stddef.h>
 #include <wchar.h>
 
-typedef struct vector{
-	wchar_t **elements;
-	size_t size;
-	size_t cap;
-} vector_t;
+typedef struct Sentence {
+    wchar_t *data;
+    size_t len;
+} Sentence;
+
+typedef struct Text {
+    Sentence *elements;
+    size_t size;
+    size_t cap;
+} Text;
+
+typedef Text vector_t;
 
 wchar_t *get_wc(char *s);
 void free_wc_string(wchar_t *wc_s);

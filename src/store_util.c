@@ -26,16 +26,17 @@ word_entry_t *create_word_entry(wchar_t *v)
     return e;
 }
 
-int word_list_init(word_entry_list *l)
+word_entry_list *word_list_init()
 {
+	word_entry_list *l = malloc(sizeof(word_entry_list));
     l->size = 0;
     l->cap = 8;
     l->items = malloc(l->cap * sizeof *l->items);
     if (l->items == NULL) {
         ERR("failed to allocate memory for l->items");
-        return -1;
+        return NULL;
     }
-    return 0;
+    return l;
 }
 
 word_entry_t *find_entry(word_entry_list *entries, wchar_t *word)
@@ -78,18 +79,38 @@ int word_list_find_or_add_item(word_entry_list *l, wchar_t *value)
     return -1;
 }
 
+int e_list_push_back(word_entry_list *l, word_entry_t e){
+	if(l == NULL || e == NULL)
+		return -1;
+
+	if(l->size >= l->cap){
+		size_t new_cap_list = l->cap * 2;
+		word_entry_t *tmp = realloc(l->items, new_cap_list * sizeof *l->items);
+		if(tmp == NULL)
+			return -1;
+		l->items = tmp;
+		l->cap = new_cap_list;
+	}
+	wprintf(L"e->value: \n", e->value);
+	l->items[l->size] = *e;
+	return 0;
+}
+
 int e_push_back(word_entry_t *e, int idx)
 {
-    if (e->size == e->cap) {
-        int new_cap = e->cap * 2;
+	if(e == NULL)
+		return -1;
+	
+    if (e->size >= e->cap) {
+        size_t new_cap = e->cap * 2;
         int *tmp = realloc(e->arr, new_cap * sizeof(int));
-        if (tmp == NULL) {
-            return -1;
-        }
+        if (tmp == NULL) 
+		return -1;
         e->arr = tmp;
         e->cap = new_cap;
     }
     e->arr[e->size++] = idx;
+
     return 0;
 }
 
@@ -105,13 +126,35 @@ int e_read_sentence(wchar_t *s, int idx, word_entry_list *entries)
         word_entry_t *e = find_entry(entries, token);
         if (e == NULL) {
             e = create_word_entry(token);
-        } else {
+		wprintf(L"%ls\n", e->value);
             e_push_back(e, idx);
+	    wprintf(L"count: %zu\n", e->arr[0]);
+	    if(e_list_push_back(entries, e) == -1){
+		    ERR("failed to push an entry in list");
+		    return -1;
+	    }
+        } else {
+		e_push_back(e, idx);
         }
-        token = wcstok(s, L" ,;", &buffer);
+        token = wcstok(NULL, L" ,;", &buffer);
     }
     wprintf(L"%ls\n", token);
     return 0;
+}
+
+void print_entry_list(word_entry_list *ens){
+	if(ens == NULL)
+		wprintf(L"ens is null!\n");
+	for(size_t i = 0; i < ens->size; i++){
+		wprintf(L"%ls: %zu; sentences=", ens->items[i].value, ens->items[i].size);
+		for(size_t j = 0; j < ens->items[i].size; j++){
+			if(j + 1 == ens->items[i].size)
+				wprintf(L"%zu", ens->items[i].arr[j]);
+			else
+				wprintf(L"%zu,", ens->items[i].arr[j]);
+		}
+		wprintf(L"\n");
+	}
 }
 
 void free_word_entry(word_entry_t *e)
@@ -128,4 +171,5 @@ void free_word_list(word_entry_list *l)
     free(l->items);
     l->items = NULL;
     l->size = l->cap = 0;
+    free(l);
 }

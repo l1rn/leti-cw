@@ -25,7 +25,7 @@ static int v_is_duplicate(vector_t *v, wchar_t *s)
 {
     size_t size_ws = wcslen(s);
     for (size_t i = 0; i < v->size; i++) {
-        if (v_s_lower_cmp(v->elements[i], s, size_ws)) {
+        if (v_s_lower_cmp(v->elements[i].data, s, size_ws)) {
             return 1;
         }
     }
@@ -112,7 +112,7 @@ vector_t *create_vector(void)
     }
     v->size = 0;
     v->cap = 4;
-    v->elements = malloc(v->cap * sizeof(wchar_t *));
+    v->elements = malloc(v->cap * sizeof(Sentence));
     if (v->elements == NULL) {
         free(v);
         return NULL;
@@ -126,7 +126,7 @@ void delete_vector(vector_t *v)
         return;
     }
     for (size_t i = 0; i < v->size; i++) {
-        free(v->elements[i]);
+        free(v->elements[i].data);
     }
     free(v->elements);
     free(v);
@@ -135,7 +135,7 @@ void delete_vector(vector_t *v)
 int resize_vector(vector_t *v)
 {
     int new_cap = v->cap * 2;
-    wchar_t **tmp = realloc(v->elements, new_cap * sizeof(wchar_t *));
+    Sentence *tmp = realloc(v->elements, new_cap * sizeof(Sentence));
 
     if (tmp == NULL) {
         return -1;
@@ -144,7 +144,6 @@ int resize_vector(vector_t *v)
     v->cap = new_cap;
     return 0;
 }
-
 
 int v_el_size(wchar_t *str)
 {
@@ -185,7 +184,9 @@ int v_push_back(vector_t *v, wchar_t *el)
         return -1;
     }
     wcscpy(cp, el);
-    v->elements[v->size++] = cp;
+    v->elements[v->size].data = cp;
+    v->elements[v->size].len = cp_size - 1;
+    v->size++;
     return 0;
 }
 
@@ -194,7 +195,7 @@ int v_remove_at(vector_t *v, size_t idx)
     if (v == NULL || idx >= v->size)
         return -1;
 
-    free(v->elements[idx]);
+    free(v->elements[idx].data);
     for (size_t i = idx; i < v->size - 1; i++) {
         v->elements[i] = v->elements[i + 1];
     }
@@ -208,8 +209,9 @@ int v_replace_at(vector_t *v, size_t idx, wchar_t *new_el)
         return -1;
     }
 
-    free(v->elements[idx]);
-    v->elements[idx] = new_el;
+    free(v->elements[idx].data);
+    v->elements[idx].data = new_el;
+    v->elements[idx].len = wcslen(new_el);
 
     return 0;
 }
@@ -217,7 +219,7 @@ int v_replace_at(vector_t *v, size_t idx, wchar_t *new_el)
 void print_v(vector_t *v)
 {
     for (size_t i = 0; i < v->size; i++) {
-        wprintf(L"%ls\n", v->elements[i]);
+        wprintf(L"%ls\n", v->elements[i].data);
     }
 }
 
