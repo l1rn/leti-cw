@@ -151,7 +151,7 @@ static wchar_t *e_to_lower(wchar_t *token)
 int e_read_sentence(wchar_t *s, int idx, word_entry_list *entries)
 {
     if (s == NULL) {
-        ERR("vector->elements is empty")
+        ERR("vector->elements is empty");
         return -1;
     }
 
@@ -162,7 +162,7 @@ int e_read_sentence(wchar_t *s, int idx, word_entry_list *entries)
             token[wcslen(token) - 1] = L'\0';
         }
         wchar_t *token_lower = e_to_lower(token);
-        if(e_push_back_list(entries, token_lower, idx) == -1){
+        if (e_push_back_list(entries, token_lower, idx) == -1) {
             ERR("failed to push in an entry list");
             return -1;
         }
@@ -185,7 +185,6 @@ void e_list_sort_by_f_letter(word_entry_list *l)
         return;
     qsort(l->items, l->size, sizeof(word_entry_t *), cmp_word);
 }
-
 
 void free_word_entry(word_entry_t *e)
 {

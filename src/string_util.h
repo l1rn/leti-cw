@@ -30,7 +30,6 @@ int v_replace_at(vector_t *v, size_t idx, wchar_t *new_el);
 int v_el_size(wchar_t *str);
 int v_in_vector(vector_t *v, wchar_t *s);
 
-void sort_by_first_word(vector_t *v);
 int v_s_lower_cmp(wchar_t *s1, wchar_t *s2, size_t s2_size);
 
 #endif // STRING_UTIL_H

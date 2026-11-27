@@ -136,7 +136,7 @@ static int task_count_and_ss(void)
     }
 
     for (size_t i = 0; i < v->size; i++) {
-        if(e_read_sentence(v->elements[i].data, i, list) == -1){
+        if (e_read_sentence(v->elements[i].data, i, list) == -1) {
             ERR("failed to read a sentence");
         }
     }

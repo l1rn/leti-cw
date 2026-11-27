@@ -6,7 +6,6 @@
 #include <wchar.h>
 #include <wctype.h>
 
-
 int v_s_lower_cmp(wchar_t *s1, wchar_t *s2, size_t s2_size)
 {
     if (wcslen(s1) != s2_size)
