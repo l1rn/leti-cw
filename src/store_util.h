@@ -11,7 +11,7 @@ typedef struct word_entry {
 } word_entry_t;
 
 typedef struct {
-    word_entry_t *items;
+    word_entry_t **items;
     size_t size;
     size_t cap;
 } word_entry_list;
