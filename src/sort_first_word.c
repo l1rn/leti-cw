@@ -4,7 +4,7 @@
 
 int len_first_word(const wchar_t *str)
 {
-    size_t end = wcscspn(str, L" \"\',/\n\t;:.!?()[]{}&+-|~<>`\r\v\f");
+    size_t end = wcscspn(str, L" \"\',/\n\t;:.!?()[]{}&+|~<>`\r\v\f");
 
     return end;
 }
@@ -19,8 +19,10 @@ int cmp_first_word(const void *a, const void *b)
     int s1_len = len_first_word(s1);
     int s2_len = len_first_word(s2);
 
-    if (s1_len < s2_len) return -1;
-    if (s1_len > s2_len) return 1;
+    if (s1_len < s2_len)
+        return -1;
+    if (s1_len > s2_len)
+        return 1;
     return 0;
 }
 

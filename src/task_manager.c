@@ -136,6 +136,7 @@ static int task_count_and_ss(void)
     for (size_t i = 0; i < v->size; i++) {
         e_read_sentence(v->elements[i].data, i, list);
     }
+    e_list_sort_by_f_letter(list);
     print_entry_list(list);
 
     free_word_list(list);

@@ -25,5 +25,6 @@ void free_word_list(word_entry_list *l);
 
 word_entry_list *word_list_init(void);
 void print_entry_list(word_entry_list *ens);
+void e_list_sort_by_f_letter(word_entry_list *l);
 
 #endif // STORE_UTIL_H
