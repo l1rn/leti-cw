@@ -17,6 +17,7 @@ typedef struct Text {
 
 typedef Text vector_t;
 
+int is_terminator(wchar_t wc);
 wchar_t *get_wc(char *s);
 void free_wc_string(wchar_t *wc_s);
 
@@ -30,7 +31,6 @@ int v_el_size(wchar_t *str);
 int v_in_vector(vector_t *v, wchar_t *s);
 
 void sort_by_first_word(vector_t *v);
-void print_v(vector_t *v);
-vector_t *read_sentences(void);
+int v_s_lower_cmp(wchar_t *s1, wchar_t *s2, size_t s2_size);
 
 #endif // STRING_UTIL_H

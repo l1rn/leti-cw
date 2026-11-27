@@ -6,7 +6,7 @@
 #include "alphabet.h"
 #include "error.h"
 #include "string_util.h"
-#include "vowel_changer.h"
+#include "task_first.h"
 
 wchar_t get_was_upper(wchar_t c, int was_upper)
 {

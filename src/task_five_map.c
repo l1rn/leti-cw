@@ -1,4 +1,4 @@
-#include "store_util.h"
+#include "task_five_map.h"
 #include "error.h"
 #include "string_util.h"
 #include <stdlib.h>
@@ -19,6 +19,7 @@ word_entry_t *create_word_entry(wchar_t *v)
 
     e->size = 0;
     e->cap = 4;
+    e->count = 0;
     e->arr = malloc(e->cap * sizeof *e->arr);
 
     if (e->arr == NULL) {
@@ -92,6 +93,7 @@ int e_push_back(word_entry_t *e, int idx)
         return -1;
     }
     if (e_idx_is_duplicate(e, idx)) {
+        e->count += 1;
         return 0;
     }
 
@@ -105,7 +107,7 @@ int e_push_back(word_entry_t *e, int idx)
         e->cap = new_cap;
     }
     e->arr[e->size++] = idx;
-
+    e->count += 1;
     return 0;
 }
 
@@ -146,13 +148,10 @@ static wchar_t *e_to_lower(wchar_t *token)
     return cp;
 }
 
-static int is_terminator(wchar_t wc){
-	return wc == L'!' || wc == L'?' || wc == L'.';
-}
-
 int e_read_sentence(wchar_t *s, int idx, word_entry_list *entries)
 {
     if (s == NULL) {
+        ERR("vector->elements is empty")
         return -1;
     }
 
@@ -163,51 +162,30 @@ int e_read_sentence(wchar_t *s, int idx, word_entry_list *entries)
             token[wcslen(token) - 1] = L'\0';
         }
         wchar_t *token_lower = e_to_lower(token);
-        e_push_back_list(entries, token_lower, idx);
+        if(e_push_back_list(entries, token_lower, idx) == -1){
+            ERR("failed to push in an entry list");
+            return -1;
+        }
         free(token_lower);
         token = wcstok(NULL, L" \"\',/\n\t;:.!?()[]{}&+|~<>", &buffer);
     }
     return 0;
 }
 
-int cmp_first_letter(const void *a, const void *b){
-	word_entry_t *pa = *(word_entry_t *const *)a;
-	wchar_t x = pa->value[0];
-	word_entry_t *pb = *(word_entry_t *const *)b;
-	wchar_t y = pb->value[0];
-	
-	if(x > y){
-		return 1;
-	}
-	if(x < y){
-		return -1;
-	}
-	return 0;
-}
-
-void e_list_sort_by_f_letter(word_entry_list *l){
-	if(l == NULL || l->items == NULL || l->size == 0) return;
-	qsort(l->items, l->size, sizeof(word_entry_t *), cmp_first_letter);
-}
-
-void print_entry_list(word_entry_list *ens)
+static int cmp_word(const void *a, const void *b)
 {
-    if (ens == NULL) {
-        wprintf(L"ens is null!\n");
-    }
-
-    for (size_t i = 0; i < ens->size; i++) {
-        wprintf(L"%ls: %zu; sentences=", ens->items[i]->value, ens->items[i]->size);
-        for (size_t j = 0; j < ens->items[i]->size; j++) {
-            if (j + 1 == ens->items[i]->size) {
-                wprintf(L"%zu", ens->items[i]->arr[j] + 1);
-            } else {
-                wprintf(L"%zu,", ens->items[i]->arr[j] + 1);
-            }
-        }
-        wprintf(L"\n");
-    }
+    word_entry_t *pa = *(word_entry_t *const *)a;
+    word_entry_t *pb = *(word_entry_t *const *)b;
+    return wcscmp(pa->value, pb->value);
 }
+
+void e_list_sort_by_f_letter(word_entry_list *l)
+{
+    if (l == NULL || l->items == NULL || l->size == 0)
+        return;
+    qsort(l->items, l->size, sizeof(word_entry_t *), cmp_word);
+}
+
 
 void free_word_entry(word_entry_t *e)
 {

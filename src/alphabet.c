@@ -14,5 +14,5 @@ const size_t EN_VOW_SIZE = SIZE(EN_VOWELS) - 1;
 const size_t RU_L_SIZE = SIZE(RU_LOWER) - 1;
 const size_t RU_VOW_SIZE = SIZE(RU_VOWELS) - 1;
 
-const wchar_t SPECIAL_SIGNS[] = { L'@', L'$', L'#', L'№', L'%', L'^', L'*', L'_', L'-' };
+const wchar_t SPECIAL_SIGNS[] = {L'@', L'$', L'#', L'№', L'%', L'^', L'*', L'_', L'-'};
 const size_t SPECIAL_SIGNS_SIZE = SIZE(SPECIAL_SIGNS);

@@ -3,21 +3,23 @@
 #include <string.h>
 
 #include "alphabet.h"
-#include "delete_first_word.h"
-#include "digit_to_alpha.h"
 #include "error.h"
-#include "sort_first_word.h"
-#include "store_util.h"
 #include "string_util.h"
-#include "task_manager.h"
-#include "vowel_changer.h"
+
+#include "io.h"
+#include "process_manager.h"
+#include "task_first.h"
+#include "task_five_map.h"
+#include "task_four.h"
+#include "task_second.h"
+#include "task_third.h"
 
 #define BUFFER_SIZE 1024
 
 // 0
 static int task_zero(void)
 {
-    vector_t *v = read_sentences();
+    vector_t *v = read_text();
     if (v == NULL) {
         ERR("failed to read buffer stdin");
         return -1;
@@ -31,7 +33,7 @@ static int task_zero(void)
 // 1
 static int task_replace_vowels(void)
 {
-    vector_t *v = read_sentences();
+    vector_t *v = read_text();
     if (v == NULL) {
         ERR("failed to read buffer stdin");
         return -1;
@@ -50,7 +52,7 @@ static int task_replace_vowels(void)
 // 2
 static int task_remove_first_words(void)
 {
-    vector_t *v = read_sentences();
+    vector_t *v = read_text();
     if (v == NULL) {
         ERR("failed to read buffer stdin");
         return -1;
@@ -74,7 +76,7 @@ static int task_remove_first_words(void)
 // 3
 static int task_sort_by_first_word()
 {
-    vector_t *v = read_sentences();
+    vector_t *v = read_text();
     if (v == NULL) {
         ERR("failed to read buffer stdin");
         return -1;
@@ -104,7 +106,7 @@ static int task_digit_replacer(void)
     }
     split[i] = L'\0';
 
-    vector_t *v = read_sentences();
+    vector_t *v = read_text();
     if (v == NULL) {
         ERR("failed to read buffer stdin");
         return -1;
@@ -120,7 +122,7 @@ static int task_digit_replacer(void)
 // 5
 static int task_count_and_ss(void)
 {
-    vector_t *v = read_sentences();
+    vector_t *v = read_text();
     if (v == NULL) {
         ERR("failed to read buffer stdin");
         return -1;
@@ -134,7 +136,9 @@ static int task_count_and_ss(void)
     }
 
     for (size_t i = 0; i < v->size; i++) {
-        e_read_sentence(v->elements[i].data, i, list);
+        if(e_read_sentence(v->elements[i].data, i, list) == -1){
+            ERR("failed to read a sentence");
+        }
     }
     e_list_sort_by_f_letter(list);
     print_entry_list(list);
@@ -144,32 +148,7 @@ static int task_count_and_ss(void)
     return 0;
 }
 
-// 6
-void print_help(void)
-{
-    wprintf(L"0 - Вывод текста после первичной обработки (удаление повторяющихся предложений без учёта "
-            L"регистра).\n"
-            L"1 - Замена гласных следующей буквой алфавита с сохранением регистра.\n"
-            L"    Английские гласные: aeiou.\n"
-            L"    Полученные буквы повторно не заменяются.\n"
-            L"2 - Удаление первого слова в каждом предложении вместе с разделителями\n"
-            L"    до второго слова (весь фрагмент от начала предложения до начала\n"
-            L"    второго слова). Остальная часть предложения сохраняется.\n"
-            L"    Если слов не осталось, предложение удаляется.\n"
-            L"3 - Сортировка предложений по возрастанию длины первого слова.\n"
-            L"    При равных длинах сохраняется исходный порядок предложений.\n"
-            L"    Для предложения без слов ключ сортировки равен 0.\n"
-            L"    Если во всём тексте нет предложений со словами, выводится текст\n"
-            L"    после первичной обработки без изменения порядка предложений.\n"
-            L"4 - Замена каждой цифры строкой, введённой отдельной строкой сразу\n"
-            L"    после номера команды и перед основным текстом.\n"
-            L"    Строка замены может быть пустой и иметь любую длину.\n"
-            L"    Цифры внутри слов тоже заменяются.\n"
-            L"    Вставленная строка повторно не обрабатывается.\n"
-            L"    Начальные пробельные символы получившихся предложений удаляются,\n"
-            L"    остальные разделители сохраняются.\n"
-            L"5 - в процессе.\n");
-}
+// 6 io.c
 
 int run_process()
 {

@@ -1,4 +1,4 @@
-#include "sort_first_word.h"
+#include "task_third.h"
 #include <stdlib.h>
 #include <wchar.h>
 

@@ -1,5 +1,4 @@
 #include "string_util.h"
-#include "delete_first_word.h"
 #include "error.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +6,6 @@
 #include <wchar.h>
 #include <wctype.h>
 
-#define BUFFER_SIZE 1024
 
 int v_s_lower_cmp(wchar_t *s1, wchar_t *s2, size_t s2_size)
 {
@@ -19,17 +17,6 @@ int v_s_lower_cmp(wchar_t *s1, wchar_t *s2, size_t s2_size)
         }
     }
     return 1;
-}
-
-static int v_is_duplicate(vector_t *v, wchar_t *s)
-{
-    size_t size_ws = wcslen(s);
-    for (size_t i = 0; i < v->size; i++) {
-        if (v_s_lower_cmp(v->elements[i].data, s, size_ws)) {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 wchar_t *get_wc(char *c)
@@ -59,44 +46,6 @@ wchar_t *get_wc(char *c)
 int is_terminator(wchar_t wc)
 {
     return wc == L'.' || wc == L'!' || wc == L'?';
-}
-
-void split_sentences_into_vector(vector_t *v, wchar_t *wc_buf)
-{
-    size_t start = 0;
-    while (wc_buf[start] != L'\0') {
-        while (iswspace(wc_buf[start])) {
-            start++;
-        }
-        if (wc_buf[start] == L'\0') {
-            break;
-        }
-
-        size_t end = start + wcscspn(wc_buf + start, L".!?");
-        if (wc_buf[end] == L'\0') {
-            break;
-        }
-        if (is_terminator(wc_buf[end])) {
-            size_t len = end - start + 1;
-            wchar_t *cp = malloc((len + 1) * sizeof(wchar_t));
-            if (cp == NULL) {
-                ERR("failed to allocate memory for a sentence");
-                return;
-            }
-            wmemcpy(cp, wc_buf + start, len);
-            cp[len] = L'\0';
-            if (!v_is_duplicate(v, cp)) {
-                if (v_push_back(v, cp) == -1) {
-                    free(cp);
-                    ERR("failed to push a sentence");
-                    return;
-                }
-            }
-
-            free(cp);
-        }
-        start = end + 1;
-    }
 }
 
 void free_wc_string(wchar_t *wc_s)
@@ -214,64 +163,4 @@ int v_replace_at(vector_t *v, size_t idx, wchar_t *new_el)
     v->elements[idx].len = wcslen(new_el);
 
     return 0;
-}
-
-void print_v(vector_t *v)
-{
-    for (size_t i = 0; i < v->size; i++) {
-        wprintf(L"%ls\n", v->elements[i].data);
-    }
-}
-
-int check_for_end_sentence(wint_t wc, int flag)
-{
-    return flag == 1 && (wchar_t)wc == L'\n';
-}
-
-vector_t *read_sentences(void)
-{
-    size_t cap = BUFFER_SIZE;
-    wchar_t *buf = malloc(cap * sizeof(wchar_t));
-    size_t size = 0;
-
-    if (buf == NULL) {
-        return NULL;
-    }
-
-    wint_t wc;
-    int flag_was_end = 0;
-    while ((wc = fgetwc(stdin)) != WEOF) {
-        if (size + 1 >= cap) {
-            size_t new_cap = cap * 2;
-            wchar_t *tmp = realloc(buf, new_cap * sizeof(wchar_t));
-            if (tmp == NULL) {
-                free(buf);
-                return NULL;
-            }
-            buf = tmp;
-            cap = new_cap;
-        }
-        if (check_for_end_sentence(wc, flag_was_end)) {
-            if (size > 0)
-                size--;
-            break;
-        }
-        if (wc == L'\n') {
-            flag_was_end = 1;
-            buf[size++] = L' ';
-        } else {
-            flag_was_end = 0;
-            buf[size++] = (wchar_t)wc;
-        }
-    }
-    buf[size] = L'\0';
-
-    vector_t *v = create_vector();
-
-    if (v != NULL) {
-        split_sentences_into_vector(v, buf);
-    }
-
-    free(buf);
-    return v;
 }

@@ -6,6 +6,7 @@
 typedef struct word_entry {
     wchar_t *value;
     int *arr;
+    int count;
     size_t size;
     size_t cap;
 } word_entry_t;
